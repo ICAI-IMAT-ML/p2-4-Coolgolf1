@@ -111,13 +111,18 @@ class LinearRegressor:
             self.intercept -= learning_rate * gradient[0]
             self.coefficients -= learning_rate * gradient[1:]
 
-            if epoch % 100000 == 0:
-                mse = 1 / m * np.sum((error) ** 2)
+            if epoch % (iterations // 10) == 0:
+                mse = np.mean((error) ** 2)
                 print(f"Epoch {epoch}: MSE = {mse}")
 
-            mse_list.append(1 / m * np.sum((error) ** 2))
-            coefficients.append(self.coefficients.copy())
-            intercepts.append(self.intercept)
+            if epoch % (iterations // 100) == 0 and iterations > 1000:
+                mse_list.append(1 / m * np.sum((error) ** 2))
+                coefficients.append(self.coefficients.copy())
+                intercepts.append(self.intercept)
+            else:
+                mse_list.append(1 / m * np.sum((error) ** 2))
+                coefficients.append(self.coefficients.copy())
+                intercepts.append(self.intercept)
 
         return mse_list, coefficients, intercepts
 
